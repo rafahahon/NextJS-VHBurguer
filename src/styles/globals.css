@@ -16,3 +16,7 @@
     --tamanho-titulo: 50px;
     --tamanho-texto-btn: 17px;
 }
+
+.layout_guide {
+    width: 80%;
+}

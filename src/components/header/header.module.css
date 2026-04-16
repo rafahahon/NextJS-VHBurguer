@@ -27,20 +27,27 @@
     color: var(--laranja-destaque);
 }
 
-.logo {
+#logo {
     width: 250px;
 }
 
 #btn_icon {
     display: none;
+    border: none;
 }
 
 @media (max-width: 768px) {
     #btn_icon {
         display: block;
+        height: 40px;
     }
 
     #nav_menu {
         display: none;
     }
+
+    #logo {
+        width: 200px;
+    }
+
 }

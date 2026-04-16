@@ -1,5 +1,3 @@
-import { INSPECT_MAX_BYTES } from "buffer";
-import { Fragment } from "react/jsx-runtime";
 import styles from "./login.module.css"
 
 // ESTRUTURA PADRÃO
@@ -8,7 +6,7 @@ const Login = () => {
         // Abrir e fechar uma tag vazia serve como o pai que não aparece na tela
         <>
             <main id={styles.main}>
-                <img src="../imgs/hamburguer_login.png" alt="" />
+                <img src="../imgs/hamburguer_login.png" alt="Hambúrguer com ingredientes flutuando em camadas sobre fundo escuro. " />
                 <div id={styles.campo_login}>
                     <h1>Login</h1>
                     <form id={styles.formulario}>
