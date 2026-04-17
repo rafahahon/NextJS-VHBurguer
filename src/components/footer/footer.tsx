@@ -6,17 +6,28 @@ import styles from "./footer.module.css"
 
 const Footer = () => {
     return (
-        <footer id={styles.footer}>
+        <footer id={styles.footer_home}>
             <div className={`${styles.container} layout_guide`}>
-                <img src="../imgs/Logo_footer.svg" alt="Logo do VH Burguer do footer que contém como plano de fundo um hamburguer" id={styles.logo} />
-                 <nav id={styles.nav_redes}>
-                    <a href=""><img src="../imgs/tiktok.png" alt="" /></a>
-                    <a href=""><img src="../imgs/face.png" alt="" /></a>
-                    <a href=""><img src="../imgs/insta.png" alt="" /></a>
-                    <a href=""><img src="../imgs/youtube.png" alt="" /></a>
-                </nav>
-                <hr id={styles.linha} />
-                <p id={styles.copy}>Copyright © 2025 VH Burguer | Todos os direitos reservados</p>
+                <div id={styles.footer_icons}>
+                    <img src="../imgs/Logo_footer.svg" alt="Logo do VH Burguer que contém como plano de fundo um hamburguer"
+                        className={styles.logo_vhburguer_footer}/>
+                    <nav id={styles.icons}>
+                        <a href="">
+                            <img src="../imgs/tiktok.png" alt="Logo da rede social Tiktok" />
+                        </a>
+                        <a href="">
+                            <img src="../imgs/face.png" alt="Logo da rede social Facebook" />
+                        </a>
+                        <a href="">
+                            <img src="../imgs/insta.png" alt="Logo da rede social Instagram" />
+                        </a>
+                        <a href="">
+                            <img src="../imgs/youtube.png" alt="Logo do Youtube" />
+                        </a>
+                    </nav>
+                </div>
+                <hr id={styles.linha}></hr>
+                <p>Copyright © 2026 VH Burguer | Todos os direitos reservados</p>
             </div>
         </footer>
     )

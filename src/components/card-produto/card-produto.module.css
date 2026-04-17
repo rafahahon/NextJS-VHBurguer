@@ -1,0 +1,73 @@
+#filtros {
+    display: flex;
+    justify-content: flex-start;
+}
+
+/* botão com icon */
+#filtros button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    padding: 8px 20px;
+    border: 0;
+    border-radius: 10px;
+    background: var(--laranja-destaque);
+    color: var(--fundo-escuro);
+    cursor: pointer;
+    transition: transform .06s ease, box-shadow .06s ease;
+}
+
+#filtros button:active {
+    transform: translateY(4px);
+    box-shadow: 0 4px 0 rgba(0, 0, 0, .18);
+}
+
+#btn_filtrar__text {
+    font-size: var(--fonte-botao);
+    font-weight: 500;
+}
+
+#btn_filtrar__icon {
+    width: 25px;
+    height: 25px;
+    flex: 0 0 auto;
+}
+
+.btn_home {
+    display: flex;
+    gap: 20px;
+}
+
+.btn_home button {
+    padding: 8px 20px;
+    border: 0;
+    border-radius: 10px;
+    background: var(--laranja-destaque);
+    color: var(--fundo-escuro);
+    cursor: pointer;
+    font-size: var(--fonte-botao);
+    font-weight: 500;
+}
+
+.campo_btn {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.cards_produtos {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 80px;
+}
+
+@media (max-width: 1000px) {
+    .campo_btn {
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+}
