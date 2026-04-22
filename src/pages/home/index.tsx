@@ -39,7 +39,6 @@ const Home = () => {
                 <section id={styles.cardapio}>
                     <div className={`${styles.container_cardapio} layout_guide`}>
                         <h2>Cardapio</h2>
-                        {/* chamar componente da lista */}
                         <ListaProduto/>
                     </div>
                 </section>
