@@ -60,7 +60,7 @@
     min-width: 400px;
 }
 
-#destaques {
+.destaques {
     background-color: var(--fundo-escuro);
     height: 70vh;
     display: flex;
@@ -132,7 +132,7 @@
     text-transform: uppercase;
 }
 
-#cardapio {
+.cardapio {
     background-color: var(--fundo-claro);
     min-height: 100vh;
     display: flex;
@@ -154,7 +154,7 @@
     text-transform: uppercase;
 }
 
-#unidades {
+.unidades {
     background: linear-gradient(#00000080, #00000080),url("../../../public/imgs/unidade.jpeg");
     background-repeat: no-repeat;
     background-size: cover;

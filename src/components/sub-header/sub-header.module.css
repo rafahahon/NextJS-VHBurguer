@@ -1,0 +1,19 @@
+#subheader {
+    height: 10vh;
+    background-color: var(--vinho);
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#voltar {
+    text-decoration: none;
+    color: var(--laranja-destaque);
+    font-weight: 500;
+    font-size: 19px;
+}
