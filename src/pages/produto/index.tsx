@@ -7,32 +7,34 @@ const Produto = () => {
     return (
         <>
             <SubHeader />
-            <main className={styles.main_detalhes}>
-                <section className={`${styles.detalhes} layout_guide`}>
-                    <article className={styles.card_detalhes} aria-label="Card de detalhes do produto">
-                        <h1 id="titulo-produto" className={styles.produto_titulo}>Criar Produto</h1>
-                        <div className={styles.card_produto}>
-                            <label htmlFor="">Nome do produto</label>
-                            <input type="text" name="nomeProduto" placeholder="BBQ Especial" required />
-                        </div>
-                        <div className={styles.card_produto}>
-                            <label htmlFor="">Descrição</label>
-                            <input type="text" name="descricao" placeholder="Hambúrguer com molho barbecue defumado com cebola caramelizada." required />
-                        </div>
-                        <div className={styles.card_produto}>
-                            <label htmlFor="">Preço (R$) </label>
-                            <input type="text" name="preco" placeholder="40,00" required />
-                        </div>
-                        <div className={styles.card_produto}>
-                            <label htmlFor="">Categoria</label>
-                            <input type="text" name="categoria" placeholder="Selecione a categoria" required />
-                        </div>
-                        <Link href="/categoria">Adicionar categoria</Link>
-                        <div className={styles.card_produto}>
-                            <label htmlFor="">URL da imagem</label>
-                            <input type="text" name="imagem" placeholder="https://unsplash.com/pt-br/fotografias/cheseburger-de-" required />
-                        </div>
-                    </article>
+            <main className={styles.main_produto}>
+                <section className={`${styles.produto} layout_guide`}>
+                    <div className={styles.formulario_produto}>
+                        <h1>Criar Produto</h1>
+                        <form>
+                            <div className={styles.campo_form}>
+                                <label htmlFor="">Nome do produto</label>
+                                <input type="text" />
+                            </div>
+                            <div className={styles.campo_form}>
+                                <label htmlFor="">Descrição</label>
+                                <textarea></textarea>
+                            </div>
+                            <div className={styles.campo_form}>
+                            <label htmlFor="">Preço(R$)</label>
+                            <input type="text" />
+                            </div>
+                            <div className={styles.campo_form}>
+                                <label htmlFor="">Categoria</label>
+                                <select>
+                                    <option value=""></option>
+                                    <option value=""></option>
+                                    <option value=""></option>
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
                 </section>
             </main>
             <Footer />

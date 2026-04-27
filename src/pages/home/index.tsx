@@ -2,6 +2,7 @@ import Header from "@/components/header/header"
 import Footer from "@/components/footer/footer"
 import styles from "./home.module.css"
 import ListaProduto from "@/components/lista-produto/lista-produto";
+
 //ESTRUTURA PADRÃO!
 const Home = () => {
     return (
