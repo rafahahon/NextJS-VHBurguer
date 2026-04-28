@@ -1,6 +1,8 @@
 import { useState } from "react";
 import styles from "./login.module.css"
 import { login } from "../api/authService";
+import { useRouter } from "next/navigation";
+import { ToastContainer, toast } from "react-toastify";
 
 // ESTRUTURA PADRÃO
 const Login = () => {
@@ -10,14 +12,23 @@ const Login = () => {
     const [email, setEmail] = useState<string>("");
     const [senha, setSenha] = useState<string>("");
 
-    function autenticar(e: React.FormEvent<HTMLFormElement>) {
+    const router = useRouter(); // useRouter navigation
+    const notificacao = (msg: string) => toast(msg); // quando notificação for chamada, vai utilizar o toast com uma mensagem dentro
+    const erro = (msg: string) => toast.error(msg);
+
+    async function autenticar(e: React.FormEvent<HTMLFormElement>) {
         // impede a página de recarregar enquanto usuário está digitando
         e.preventDefault();
-        try{
-            login(email, senha);
-            console.log("Eba, loguei 😍")
-        }catch(e: any){
-            alert(e.message)
+        try {
+            await login(email, senha);
+            notificacao("Login efetuado!");
+
+            setTimeout(() => { // espera antes de executar
+                router.push("/home"); // espera o login ser autenticado e redireciona para home
+            }, 2000) // 2 segundos
+            
+        } catch (error: any) {
+            alert(error.message);
         }
     }
 
@@ -26,20 +37,21 @@ const Login = () => {
     return ( // nesse tipo de estrutura, todos os elementos precisam de um pai
         // Abrir e fechar uma tag vazia serve como o pai que não aparece na tela
         <>
+            <ToastContainer />
             <main id={styles.main}>
                 <img src="../imgs/hamburguer_login.png" alt="Hambúrguer com ingredientes flutuando em camadas sobre fundo escuro. " />
                 <div id={styles.campo_login}>
                     <h1>Login</h1>
-                    <form id={styles.formulario} onSubmit={autenticar}> 
+                    <form id={styles.formulario} onSubmit={autenticar}>
                         <div className={styles.campo_form}>
-                            <label htmlFor="email">E-mail</label>                           
-                            <input type="text" name="email" placeholder="email@exemplo.com" required 
-                            value={email} onChange={(e) => setEmail(e.target.value)} />
+                            <label htmlFor="email">E-mail</label>
+                            <input type="text" name="email" placeholder="email@exemplo.com" required
+                                value={email} onChange={(e) => setEmail(e.target.value)} />
                         </div>
                         <div className={styles.campo_form}>
                             <label htmlFor="senha">Senha</label>
-                            <input type="password" name="senha" placeholder="********" required 
-                            value={senha} onChange={(e) => setSenha(e.target.value)}/>
+                            <input type="password" name="senha" placeholder="********" required
+                                value={senha} onChange={(e) => setSenha(e.target.value)} />
                         </div>
                         <a id={styles.esq_senha} href="">Esqueceu sua senha?</a>
                         <button>Entrar</button>

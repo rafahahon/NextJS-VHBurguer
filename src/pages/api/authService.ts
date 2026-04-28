@@ -1,4 +1,5 @@
 import { api } from "./api";
+import secureLocalStorage from "react-secure-storage";
 
 // retorno visual pro usuário 
 // await obrigada a função ser async e o export permite exportar a função
@@ -8,9 +9,11 @@ export async function login(email: string, senha: string){
         // requisição:
         // aqui vai o caminho da api (igual no swagger) excluindo apenas o "/api"
         const response = await api.post("Autenticacao/Login", {email, senha});
+        // console.log("Eba, deu certo!");
+        // console.log(response);
+        const token = response.data.token;
 
-        console.log("Eba, deu certo!");
-        console.log(response);
+         secureLocalStorage.setItem("Token", token);
         // o retorno do login é o token, utilizado para controle de permissões, vamos fazer o tratamento de cada um
         // await serve para esperar um tempo, pois nao sabemos o quanto a requisicao vai demorar
     }catch(error: any){
