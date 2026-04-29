@@ -13,7 +13,7 @@ const Login = () => {
     const [senha, setSenha] = useState<string>("");
 
     const router = useRouter(); // useRouter navigation
-    const notificacao = (msg: string) => toast(msg); // quando notificação for chamada, vai utilizar o toast com uma mensagem dentro
+    const notificacao = (msg: string) => toast.success(msg); // quando notificação for chamada, vai utilizar o toast com uma mensagem dentro
     const erro = (msg: string) => toast.error(msg);
 
     async function autenticar(e: React.FormEvent<HTMLFormElement>) {

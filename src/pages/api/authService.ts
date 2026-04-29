@@ -11,6 +11,7 @@ export async function login(email: string, senha: string){
         const response = await api.post("Autenticacao/Login", {email, senha});
         // console.log("Eba, deu certo!");
         // console.log(response);
+        // busca entra vários dados e retorna SOMENTE o token 
         const token = response.data.token;
 
          secureLocalStorage.setItem("Token", token);
