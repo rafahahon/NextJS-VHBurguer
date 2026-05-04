@@ -1,15 +1,43 @@
 import SubHeader from "@/components/sub-header/sub-header";
 import Footer from "@/components/footer/footer";
 import styles from "./detalhe-produto.module.css"
+import { useEffect, useState } from "react";
+import { listarPorId } from "@/pages/api/produtoService";
+import { useParams } from "next/navigation";
+
+interface Produto {
+    nome: string,
+    descricao: string,
+    preco: number,
+    imagemUrl: string
+}
 
 const DetalheProduto = () => {
+
+    const[produto, setProduto] = useState<Produto>();
+
+    const {id} = useParams();
+
+    async function listarProduto() {
+        try{
+            const response = await listarPorId(Number(id));
+            setProduto(response);
+        }catch (error: any) {
+            console.log(error.message);
+        }
+    }
+
+    useEffect(() => { 
+            listarProduto();
+        }, [])
+
     return (
         <>
             <SubHeader />
             <main className={styles.main_detalhes}>
                 <section className={`${styles.detalhes} layout_guide`}>
                     <article className={styles.card_detalhes} aria-label="Card de detalhes do produto">
-                        <h1 id="titulo-detalhes-produto" className={styles.detalhes_titulo}>Detalhes do X-Bacon</h1>
+                        <h1 id="titulo-detalhes-produto" className={styles.detalhes_titulo}>Detalhes {produto?.nome}</h1>
                         <figure className={styles.card_detalhes_imagem} >
                             <img
                                 src="/imgs/HamburguerAlcatraComBacon.png"

@@ -1,23 +1,60 @@
+import Link from "next/link";
 import CardProduto from "../card-produto/card-produto";
 import styles from "./lista-produto.module.css";
+import { useEffect, useState } from "react";
+import { listarProduto } from "@/pages/api/produtoService";
+
+interface Produto {
+    produtoID: number,
+    nome: string,
+    preco: number,
+    descricao: string,
+    imagemUrl: string
+}
 
 const ListaProduto = () => {
+
+    const [produtos, setProdutos] = useState<Produto[]>([]);
+
+    async function listar() {
+        try {
+            const lista = await listarProduto();
+
+            setProdutos(lista);
+            console.log(lista);
+        } catch (error: any) {
+            console.log(error.message)
+        }
+    }
+
+    useEffect(() => { // Realiza a ação quando a lista produto for renderizada
+        listar();
+    }, [])
+
     return (
         <>
             <div id={styles.botoes_home}>
-                <button className={styles.botao}>Filtrar</button>
+                <button className={styles.botao}>
+                    Filtrar
+                </button>
                 <div id={styles.botoes_direita}>
-                    <button className={styles.botao}>Promoções</button>
-                    <button className={styles.botao}>Produtos</button>
+                    <Link className={styles.botao} href="/promocoes">Promoções</Link>
+                    <Link className={styles.botao} href="/produto">Adicionar produtos</Link>
                 </div>
             </div>
             <div id={styles.cards_produtos}>
-                <CardProduto />
-                <CardProduto />
-                <CardProduto />
-                <CardProduto />
-                <CardProduto />
-                <CardProduto />
+                {produtos.length > 0 ? produtos.map((item) => (
+                    <CardProduto
+                        key={item.produtoID}
+                        produtoID={item.produtoID}
+                        titulo={item.nome}
+                        descricao={item.descricao}
+                        preco={item.preco}
+                        img={item.imagemUrl}
+                    />
+                )) : (
+                    <p>Carregando produto...</p>
+                )}
             </div>
         </>
     )

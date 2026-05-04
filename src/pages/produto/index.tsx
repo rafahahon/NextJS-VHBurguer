@@ -60,7 +60,7 @@ const Produto = () => {
       <main className={styles.main_produto}>
         <section className={`${styles.section_flex} layout_guide`}>
           <h1>Criar produto</h1>
-          <form className={styles.formulario_produto} onSubmit={cadastrarProduto}>
+          <form className={styles.formulario_produto} onSubmit={Cadastrar}>
             <div className={styles.campo_form}>
               <label htmlFor="">Nome do produto</label>
               <input type="text" value={nome} onChange={(e) => setNome(e.target.value)} />
