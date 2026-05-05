@@ -4,32 +4,41 @@ import styles from "./detalhe-produto.module.css"
 import { useEffect, useState } from "react";
 import { listarPorId } from "@/pages/api/produtoService";
 import { useParams } from "next/navigation";
+import { formatarPreco } from "@/utils/formatacao";
 
 interface Produto {
     nome: string,
     descricao: string,
     preco: number,
-    imagemUrl: string
+    imagemUrl: string,
+    categorias: string[]
 }
 
 const DetalheProduto = () => {
 
-    const[produto, setProduto] = useState<Produto>();
+    const [produto, setProduto] = useState<Produto>();
 
-    const {id} = useParams();
+    const params = useParams();
+
+    const id = params?.id;
 
     async function listarProduto() {
-        try{
+        try {
             const response = await listarPorId(Number(id));
             setProduto(response);
-        }catch (error: any) {
+        } catch (error: any) {
             console.log(error.message);
         }
     }
 
-    useEffect(() => { 
+    useEffect(() => {
+        if (!id) return;
+
+        setTimeout(() => {
             listarProduto();
-        }, [])
+        }, 1000)
+        // vai listar apenas quando o id for modificado
+    }, [id])
 
     return (
         <>
@@ -37,43 +46,50 @@ const DetalheProduto = () => {
             <main className={styles.main_detalhes}>
                 <section className={`${styles.detalhes} layout_guide`}>
                     <article className={styles.card_detalhes} aria-label="Card de detalhes do produto">
-                        <h1 id="titulo-detalhes-produto" className={styles.detalhes_titulo}>Detalhes {produto?.nome}</h1>
-                        <figure className={styles.card_detalhes_imagem} >
-                            <img
-                                src="/imgs/HamburguerAlcatraComBacon.png"
-                                alt="Hambúrguer sobre uma tábua de madeira, com pão, carne, queijo, bacon, alface, tomate e cebola roxa." />
-                        </figure>
+                        {produto ? (
+                            <>
+                                <h1 id="titulo-detalhes-produto" className={styles.detalhes_titulo}>Detalhes {produto?.nome}</h1>
+                                <figure className={styles.card_detalhes_imagem} >
+                                    <img
+                                        src={produto.imagemUrl}
+                                        alt={produto?.nome}/>
+                                </figure>
+                                <div className={styles.card_detalhes_infos}>
+                                    <div className={`${styles.card_detalhes_col} ${styles.card_detalhes_col_esq}`}>
+                                        <div className={styles.campo}>
+                                            <h2 className={styles.campo_titulo}>Nome do produto</h2>
+                                            <p className={styles.campo_valor}>{produto.nome}</p>
+                                        </div>
 
+                                        <div className={styles.campo}>
+                                            <h2 className={styles.campo_titulo}>Descrição</h2>
+                                            <p className={styles.campo_valor}>
+                                                {produto.descricao}
+                                            </p>
+                                        </div>
+                                    </div>
 
-                        <div className={styles.card_detalhes_infos}>
-                            <div className={`${styles.card_detalhes_col} ${styles.card_detalhes_col_esq}`}>
+                                    <div className={`${styles.card_detalhes_col} ${styles.card_detalhes_col_dir}`}>
+                                        <div className={styles.campo}>
+                                            <h2 className={styles.campo_titulo}>Preço (R$)</h2>
+                                            <p className={styles.campo_valor}>
+                                                <span className={styles.preco_atual}>{formatarPreco(produto.preco)}</span>
+                                                {/* <span className={styles.preco_anterior}>R$20,00</span> */}
+                                            </p>
+                                        </div>
 
-                                <div className={styles.campo}>
-                                    <h2 className={styles.campo_titulo}>Descrição</h2>
-                                    <p className={styles.campo_valor}>
-                                        Um pão brioche macio segura a fera: duas (ou três) carnes altas e suculentas, queijo cheddar derretido escorrendo pelas laterais, bacon crocante, cebola caramelizada no ponto adocicado, alface fresca, tomate e um molho especial intenso que amarra tudo. Para completar o ataque, uma camada extra de onion rings ou molho defumado que transforma cada mordida numa explosão.
-                                    </p>
+                                        <div className={styles.campo}>
+                                            <h2 className={styles.campo_titulo}>Categorias</h2>
+                                            <ul className={styles.campo_lista}>
+                                                {produto.categorias.map((cat) => (
+                                                    <li key={cat}>{cat}</li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-
-                            <div className={`${styles.card_detalhes_col} ${styles.card_detalhes_col_dir}`}>
-                                <div className={styles.campo}>
-                                    <h2 className={styles.campo_titulo}>Preço (R$)</h2>
-                                    <p className={styles.campo_valor}>
-                                        <span className={styles.preco_anterior}>R$45,00</span>
-                                        <span className={styles.preco_atual}>R$35,00</span>
-                                    </p>
-                                </div>
-
-                                <div className={styles.campo}>
-                                    <h2 className={styles.campo_titulo}>Categoria</h2>
-                                    <ul className={styles.campo_lista}>
-                                        <li>Premium</li>
-                                        <li>Artesanal</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
+                            </>
+                        ) : (<p>Carregando produto...</p>)}
                     </article>
                 </section>
             </main>

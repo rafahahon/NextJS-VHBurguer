@@ -21,6 +21,9 @@ const CardProduto = ({ titulo, descricao, img, preco, produtoID }: Produto) => {
             <p className={styles.desc_produto}>{descricao}</p>
             <div className={styles.campo_itens}>
                 <p className={styles.valor_produto}>{formatarPreco(preco)}</p>
+                <Link href={"/historico/" + produtoID}>
+                    <img src="/imgs/info.svg" alt="ícone que representa histórico" />
+                </Link>
                 <button>
                     <img src="/imgs/trash.svg" alt="ícone que representa exclusão" />
                 </button>
