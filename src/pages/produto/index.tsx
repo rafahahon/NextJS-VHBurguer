@@ -3,12 +3,16 @@ import SubHeader from "@/components/sub-header/sub-header"
 import styles from "./produto.module.css"
 import { useEffect, useState } from "react";
 import { listarCategoria } from "../api/categoriaService";
-import { cadastrarProduto } from "../api/produtoService";
+import { cadastrarProduto, editarProduto, listarPorId } from "../api/produtoService";
+import Toast from "@/components/toast/toast";
+import { useRouter } from "next/router";
+import { useParams } from "next/navigation";
+import { notificacao } from "@/utils/toast";
 
 
 // tem que estar igual ao banco 
 interface Categoria {
-  categoriaID: number,
+  categoriaId: number,
   nome: string
 }
 
@@ -22,15 +26,37 @@ const Produto = () => {
   const [preco, setPreco] = useState<string>("");
   const [imagem, setImagem] = useState<File | null>(null); // permite que a imagem receba 2 tipos de valores
   const [categoriasSelecionadas, setCategoriasSelecionadas] = useState<number[]>([]);
+  // const [telaEditar, setTelaEditar] = useState<Boolean>();
+
+  const router = useRouter();
+  const id = router.query.id;
+  let telaEditar = id ? true : false;
+  // if(id){
+  //   setTelaEditar(true);
+  // } else {
+  //   setTelaEditar(false);
+  // }
 
   async function listarCategoriaEmProduto() {
     const lista = await listarCategoria();
 
+
     setCategorias(lista.data);
-    // console.log(lista.data);
+    console.log(lista.data);
   }
 
-  async function Cadastrar(e: React.FormEvent<HTMLFormElement>) {
+  async function carregarInformacoes(){
+    if(!id) return; 
+
+    const produto = await listarPorId(Number(id));
+    console.log(produto);
+    setNome(produto.nome);
+    setDescricao(produto.descricao);
+    setPreco(produto.preco);
+    setCategoriasSelecionadas(produto.categoriasIds)
+  }
+
+  async function salvarProduto(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     try {
 
@@ -39,10 +65,18 @@ const Produto = () => {
         descricao,
         preco,
         imagem,
-        categoriasId: categoriasSelecionadas
+        categoriasIds: categoriasSelecionadas
       }
 
-      await cadastrarProduto(dados)
+      // await cadastrarProduto(dados)
+      
+      if(telaEditar){
+        await editarProduto(Number(id), dados);
+        notificacao("Produto editado!")
+      } else {
+        await editarProduto(Number(id), dados);
+        notificacao("Produto editado!")
+      }
       
     } catch (error: any) {
       console.log(error.message)
@@ -52,15 +86,17 @@ const Produto = () => {
   // quando produto for renderizado, a funcao listarCategoriaEmProduto acontece
   useEffect(() => {
     listarCategoriaEmProduto();
+    carregarInformacoes();
   }, [])
 
   return (
     <>
       <SubHeader />
+      <Toast/>
       <main className={styles.main_produto}>
         <section className={`${styles.section_flex} layout_guide`}>
-          <h1>Criar produto</h1>
-          <form className={styles.formulario_produto} onSubmit={Cadastrar}>
+          <h1>{telaEditar ? "Editar produto" : "Criar produto"}</h1>
+          <form className={styles.formulario_produto} onSubmit={salvarProduto}>
             <div className={styles.campo_form}>
               <label htmlFor="">Nome do produto</label>
               <input type="text" value={nome} onChange={(e) => setNome(e.target.value)} />
@@ -75,11 +111,14 @@ const Produto = () => {
             </div>
             <div className={styles.campo_form}>
               <label htmlFor="">Categoria</label>
-              <select multiple onChange={(e) => setCategoriasSelecionadas(
+              <select
+              multiple
+              value={categoriasSelecionadas.map(String)}
+              onChange={(e) => setCategoriasSelecionadas(
                 Array.from(e.target.selectedOptions).map((option) => Number(option.value))
               )}>
                 {categorias.map((item) => (
-                  <option value={item.categoriaID} key={item.categoriaID}>{item.nome}</option>
+                  <option value={item.categoriaId} key={item.categoriaId}>{item.nome}</option>
                 )
                 )}
               </select>

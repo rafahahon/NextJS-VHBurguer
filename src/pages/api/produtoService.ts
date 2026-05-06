@@ -1,14 +1,25 @@
 import { api } from "./api";
 
-type Produto = { // É type pois não são informações que vem da api, se fosse seria uma interface
+// ProdutoFormulario => base para cadastro do produto
+type ProdutoFormulario = {
     nome: string,
     descricao: string,
     preco: string,
     imagem: File | null,
-    categoriasId: number[]
+    categoriasIds: number[],
 }
 
-export async function cadastrarProduto(dados: Produto) {
+// ProdutoListagem => base para receber o produto da api (tudo que vem da api é interface)
+interface ProdutoListagem { // É type pois não são informações que vem da api, se fosse seria uma interface
+    nome: string,
+    descricao: string,
+    preco: string,
+    categoriasIds: number[],
+    imagemUrl: string,
+    statusProduto: boolean
+}
+
+export async function cadastrarProduto(dados: ProdutoFormulario) {
     try {
         const formData = new FormData(); // Madando dados que o usuário passou para a api com o formData
         formData.append("nome", dados.nome); // append -> acrescentando na api, o nome do valor entre parênteses tem que estar igual na api
@@ -18,7 +29,7 @@ export async function cadastrarProduto(dados: Produto) {
             formData.append("imagem", dados.imagem);
         }
 
-        dados.categoriasId.forEach((id) => {
+        dados.categoriasIds.forEach((id) => {
             formData.append("categoriaIds", id.toString()); // Convertendo o id para string por conta do formData
         })
 
@@ -33,10 +44,16 @@ export async function listarProduto() {
     try {
         const response = await api.get("Produto");
 
-        const produtos = response.data.map((produto: any) => ({
+        // filtra somente produtos ativos
+        const produtosAtivos = response.data.filter(
+            (produto: ProdutoListagem) => produto.statusProduto === true
+        );
+
+        // adiciona URL completa da imagem
+        const produtos = produtosAtivos.map((produto: ProdutoListagem) => ({
             ...produto,
             imagemUrl: `${api.defaults.baseURL}${produto.imagemUrl}`
-        }))
+        }));
 
         return produtos;
 
@@ -56,7 +73,37 @@ export async function listarPorId(id: number) {
 
         return produto;
 
-        }catch (error: any) {
-            throw new Error(error.response.data);
+    } catch (error: any) {
+        throw new Error(error.response.data);
+    }
+}
+
+export async function excluirProduto(produtoId: number) {
+    try {
+        await api.delete("Produto/" + produtoId)
+    } catch (error: any) {
+        throw new Error(error.response.data)
+    }
+}
+
+export async function editarProduto(produtoId: number, dados: ProdutoFormulario) {
+    try{
+        const formData = new FormData(); 
+
+        formData.append("nome", dados.nome); 
+        formData.append("descricao", dados.descricao);
+        formData.append("preco", dados.preco);
+        if (dados.imagem) {
+            formData.append("imagem", dados.imagem);
         }
+
+        dados.categoriasIds.forEach((id) => {
+            formData.append("categoriasIds", id.toString()); 
+        })
+
+        await api.put("Produto/" + produtoId, formData);
+
+    }catch (error: any) {
+        throw new Error(error.response.data);
+    }
 }

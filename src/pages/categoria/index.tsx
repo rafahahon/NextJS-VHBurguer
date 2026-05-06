@@ -26,7 +26,6 @@ const Categoria = () => {
 
     return (
         <>
-            <ToastContainer />
             <SubHeader />
             <main id={styles.main}>
                 <h1>CRIAR CATEGORIA</h1>

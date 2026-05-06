@@ -37,7 +37,6 @@ const Login = () => {
     return ( // nesse tipo de estrutura, todos os elementos precisam de um pai
         // Abrir e fechar uma tag vazia serve como o pai que não aparece na tela
         <>
-            <ToastContainer />
             <main id={styles.main}>
                 <img src="../imgs/hamburguer_login.png" alt="Hambúrguer com ingredientes flutuando em camadas sobre fundo escuro. " />
                 <div id={styles.campo_login}>

@@ -2,14 +2,16 @@ import Link from "next/link";
 import CardProduto from "../card-produto/card-produto";
 import styles from "./lista-produto.module.css";
 import { useEffect, useState } from "react";
-import { listarProduto } from "@/pages/api/produtoService";
+import { excluirProduto, listarProduto } from "@/pages/api/produtoService";
+import { notificacao, toastConfirmarExclusao } from "@/utils/toast";
 
 interface Produto {
     produtoID: number,
     nome: string,
     preco: number,
     descricao: string,
-    imagemUrl: string
+    imagemUrl: string,
+    statusProduto: boolean
 }
 
 const ListaProduto = () => {
@@ -27,9 +29,28 @@ const ListaProduto = () => {
         }
     }
 
+    function confirmarExclusao(produtoId: number) {
+        toastConfirmarExclusao(async () => {
+            try {
+                await excluirProduto(produtoId);
+                setProdutos((ListaAtual) =>
+                    ListaAtual.map((produto) =>
+                        produto.produtoID === produtoId
+                            ? { ...produto, statusProduto: false }
+                            : produto
+                    )
+                )
+                notificacao("Produto inativado!")
+                listar(); // Recarrega a página quando um produto é deletado
+            } catch (error: any) {
+                error(error.message)
+            }
+        })
+    }
+
     useEffect(() => { // Realiza a ação quando a lista produto for renderizada
         listar();
-    }, [])
+    }, []) 
 
     return (
         <>
@@ -46,11 +67,12 @@ const ListaProduto = () => {
                 {produtos.length > 0 ? produtos.map((item) => (
                     <CardProduto
                         key={item.produtoID}
-                        produtoID={item.produtoID}
+                        produtoId={item.produtoID}
                         titulo={item.nome}
                         descricao={item.descricao}
                         preco={item.preco}
                         img={item.imagemUrl}
+                        onDelete={confirmarExclusao}
                     />
                 )) : (
                     <p>Carregando produto...</p>

@@ -7,13 +7,15 @@ type Produto = {
     descricao: string,
     img: string,
     preco: number, // poderia ser string, mas como vem da api, fica como number
-    produtoID: number
+    produtoId: number,
+    // criando uma props que recebe uma função
+    onDelete: (produtoID: number) => void
 }
 
-const CardProduto = ({ titulo, descricao, img, preco, produtoID }: Produto) => {
+const CardProduto = ({ titulo, descricao, img, preco, produtoId, onDelete }: Produto) => {
     return (
         <article className={styles.card_produto}>
-            <Link href={"/detalhe-produto/" + produtoID}>
+            <Link href={"/detalhe-produto/" + produtoId}>
                 <img src={img} alt="Produto vendido pela loja."
                     className={styles.img_produto} />
             </Link>
@@ -21,15 +23,15 @@ const CardProduto = ({ titulo, descricao, img, preco, produtoID }: Produto) => {
             <p className={styles.desc_produto}>{descricao}</p>
             <div className={styles.campo_itens}>
                 <p className={styles.valor_produto}>{formatarPreco(preco)}</p>
-                <Link href={"/historico/" + produtoID}>
+                <Link href={"/historico/" + produtoId}>
                     <img src="/imgs/info.svg" alt="ícone que representa histórico" />
                 </Link>
-                <button>
+                <button onClick={() => onDelete(produtoId)}>
                     <img src="/imgs/trash.svg" alt="ícone que representa exclusão" />
                 </button>
-                <button>
+                <Link href={"/produto?id=" + produtoId}>
                     <img src="/imgs/editar.svg" alt="ícone que representa edição" />
-                </button>
+                </Link>
             </div>
         </article>
     )
