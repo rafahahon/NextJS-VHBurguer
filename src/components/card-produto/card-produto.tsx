@@ -9,10 +9,12 @@ type Produto = {
     preco: number, // poderia ser string, mas como vem da api, fica como number
     produtoId: number,
     // criando uma props que recebe uma função
-    onDelete: (produtoID: number) => void
+    onDelete: (produtoID: number) => void,
+    estaLogado: boolean
+
 }
 
-const CardProduto = ({ titulo, descricao, img, preco, produtoId, onDelete }: Produto) => {
+const CardProduto = ({ titulo, descricao, img, preco, produtoId, onDelete, estaLogado }: Produto) => {
     return (
         <article className={styles.card_produto}>
             <Link href={"/detalhe-produto/" + produtoId}>
@@ -23,15 +25,19 @@ const CardProduto = ({ titulo, descricao, img, preco, produtoId, onDelete }: Pro
             <p className={styles.desc_produto}>{descricao}</p>
             <div className={styles.campo_itens}>
                 <p className={styles.valor_produto}>{formatarPreco(preco)}</p>
-                <Link href={"/historico/" + produtoId}>
-                    <img src="/imgs/info.svg" alt="ícone que representa histórico" />
-                </Link>
-                <button onClick={() => onDelete(produtoId)}>
-                    <img src="/imgs/trash.svg" alt="ícone que representa exclusão" />
-                </button>
-                <Link href={"/produto?id=" + produtoId}>
-                    <img src="/imgs/editar.svg" alt="ícone que representa edição" />
-                </Link>
+                {estaLogado && (
+                <>
+                    <Link href={"/historico/" + produtoId}>
+                        <img src="/imgs/info.svg" alt="ícone que representa histórico" />
+                    </Link>
+                    <button onClick={() => onDelete(produtoId)}>
+                        <img src="/imgs/trash.svg" alt="ícone que representa exclusão" />
+                    </button>
+                    <Link href={"/produto?id=" + produtoId}>
+                        <img src="/imgs/editar.svg" alt="ícone que representa edição" />
+                    </Link>
+                </>
+                )}
             </div>
         </article>
     )

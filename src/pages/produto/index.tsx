@@ -8,6 +8,7 @@ import Toast from "@/components/toast/toast";
 import { useRouter } from "next/router";
 import { useParams } from "next/navigation";
 import { notificacao } from "@/utils/toast";
+import { verificarAutenticacao } from "@/utils/auth";
 
 
 // tem que estar igual ao banco 
@@ -27,6 +28,7 @@ const Produto = () => {
   const [imagem, setImagem] = useState<File | null>(null); // permite que a imagem receba 2 tipos de valores
   const [categoriasSelecionadas, setCategoriasSelecionadas] = useState<number[]>([]);
   // const [telaEditar, setTelaEditar] = useState<Boolean>();
+  const [estaAutenticado, setEstaAutenticado] = useState(false);
 
   const router = useRouter();
   const id = router.query.id;
@@ -45,8 +47,8 @@ const Produto = () => {
     console.log(lista.data);
   }
 
-  async function carregarInformacoes(){
-    if(!id) return; 
+  async function carregarInformacoes() {
+    if (!id) return;
 
     const produto = await listarPorId(Number(id));
     console.log(produto);
@@ -69,15 +71,15 @@ const Produto = () => {
       }
 
       // await cadastrarProduto(dados)
-      
-      if(telaEditar){
+
+      if (telaEditar) {
         await editarProduto(Number(id), dados);
         notificacao("Produto editado!")
       } else {
         await editarProduto(Number(id), dados);
         notificacao("Produto editado!")
       }
-      
+
     } catch (error: any) {
       console.log(error.message)
     }
@@ -85,14 +87,26 @@ const Produto = () => {
 
   // quando produto for renderizado, a funcao listarCategoriaEmProduto acontece
   useEffect(() => {
+
+    if (!verificarAutenticacao()) {
+      router.push("/home")
+    } else {
+      setEstaAutenticado(true);
+    }
+
     listarCategoriaEmProduto();
     carregarInformacoes();
   }, [])
 
+  // a tela de produto não vai renderizar caso o usuário não esteja autenticado
+  if (!estaAutenticado) {
+    return null;
+  }
+
   return (
     <>
       <SubHeader />
-      <Toast/>
+      <Toast />
       <main className={styles.main_produto}>
         <section className={`${styles.section_flex} layout_guide`}>
           <h1>{telaEditar ? "Editar produto" : "Criar produto"}</h1>
@@ -112,11 +126,11 @@ const Produto = () => {
             <div className={styles.campo_form}>
               <label htmlFor="">Categoria</label>
               <select
-              multiple
-              value={categoriasSelecionadas.map(String)}
-              onChange={(e) => setCategoriasSelecionadas(
-                Array.from(e.target.selectedOptions).map((option) => Number(option.value))
-              )}>
+                multiple
+                value={categoriasSelecionadas.map(String)}
+                onChange={(e) => setCategoriasSelecionadas(
+                  Array.from(e.target.selectedOptions).map((option) => Number(option.value))
+                )}>
                 {categorias.map((item) => (
                   <option value={item.categoriaId} key={item.categoriaId}>{item.nome}</option>
                 )

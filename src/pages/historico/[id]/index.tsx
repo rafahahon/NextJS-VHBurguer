@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { erro } from "@/utils/toast";
 import { listarPorIdDoProduto } from "@/pages/api/logProdutoService";
 import { useParams } from "next/navigation";
+import { useRouter } from "next/router";
+import { verificarAutenticacao } from "@/utils/auth";
 
 type HistoricoAlteracao = {
     logID: number;
@@ -16,10 +18,13 @@ type HistoricoAlteracao = {
 
 const Historico = () => {
 
-    const [historico, setHistorico] = useState<HistoricoAlteracao[] | null>(null); // 
+    const [historico, setHistorico] = useState<HistoricoAlteracao[] | null>(null);
+    const [estaAutenticado, setEstaAutenticado] = useState(false);
 
     const params = useParams();
     const id = params?.id // recebe o id que pode ser vazio
+
+    const router = useRouter();
 
     async function listarHistorico() {
         try {
@@ -37,7 +42,17 @@ const Historico = () => {
             listarHistorico();
         }, 1000);
         // vai listar apenas quando o id for modificado
+
+        if (!verificarAutenticacao()) {
+            router.push("/home")
+        } else {
+            setEstaAutenticado(true);
+        }
     }, [id])
+
+    if (!estaAutenticado) {
+        return null;
+    }
 
     return (
         <>

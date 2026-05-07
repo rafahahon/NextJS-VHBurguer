@@ -14,6 +14,7 @@ export async function login(email: string, senha: string){
         // busca entra vários dados e retorna SOMENTE o token 
         const token = response.data.token;
 
+                        // setItem -> cria 
          secureLocalStorage.setItem("Token", token);
         // o retorno do login é o token, utilizado para controle de permissões, vamos fazer o tratamento de cada um
         // await serve para esperar um tempo, pois nao sabemos o quanto a requisicao vai demorar

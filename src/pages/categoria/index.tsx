@@ -2,16 +2,21 @@ import Footer from "@/components/footer/footer"
 import styles from './categoria.module.css'
 import Link from 'next/link'
 import SubHeader from "@/components/sub-header/sub-header"
-import { useState } from "react"
 import { cadastrarCategoria } from "../api/categoriaService"
 import { ToastContainer, toast } from "react-toastify";
+import { verificarAutenticacao } from "@/utils/auth"
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 const Categoria = () => {
 
     const [categoria, setCategoria] = useState<string>("");
+    const [estaAutenticado, setEstaAutenticado] = useState(false);
 
     const notificacao = (msg: string) => toast.success(msg);
     const erro = (msg: string) => toast.error(msg);
+
+    const router = useRouter();
 
     async function cadastrar(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -22,6 +27,19 @@ const Categoria = () => {
             erro(error.message);
         }
 
+    }
+
+    useEffect(() => {
+
+        if (!verificarAutenticacao()) {
+            router.push("/home")
+        } else {
+            setEstaAutenticado(true);
+        }
+    }, [])
+
+    if (!estaAutenticado) {
+        return null;
     }
 
     return (
