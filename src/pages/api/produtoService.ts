@@ -22,6 +22,7 @@ interface ProdutoListagem { // É type pois não são informações que vem da a
 export async function cadastrarProduto(dados: ProdutoFormulario) {
     try {
         const formData = new FormData(); // Madando dados que o usuário passou para a api com o formData
+        
         formData.append("nome", dados.nome); // append -> acrescentando na api, o nome do valor entre parênteses tem que estar igual na api
         formData.append("descricao", dados.descricao);
         formData.append("preco", dados.preco);

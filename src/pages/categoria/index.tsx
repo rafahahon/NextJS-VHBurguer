@@ -7,14 +7,12 @@ import { ToastContainer, toast } from "react-toastify";
 import { verificarAutenticacao } from "@/utils/auth"
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { erro, notificacao } from "@/utils/toast"
 
 const Categoria = () => {
 
     const [categoria, setCategoria] = useState<string>("");
     const [estaAutenticado, setEstaAutenticado] = useState(false);
-
-    const notificacao = (msg: string) => toast.success(msg);
-    const erro = (msg: string) => toast.error(msg);
 
     const router = useRouter();
 

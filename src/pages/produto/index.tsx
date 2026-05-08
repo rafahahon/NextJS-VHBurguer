@@ -42,7 +42,6 @@ const Produto = () => {
   async function listarCategoriaEmProduto() {
     const lista = await listarCategoria();
 
-
     setCategorias(lista.data);
     console.log(lista.data);
   }
@@ -51,7 +50,6 @@ const Produto = () => {
     if (!id) return;
 
     const produto = await listarPorId(Number(id));
-    console.log(produto);
     setNome(produto.nome);
     setDescricao(produto.descricao);
     setPreco(produto.preco);
@@ -76,7 +74,7 @@ const Produto = () => {
         await editarProduto(Number(id), dados);
         notificacao("Produto editado!")
       } else {
-        await editarProduto(Number(id), dados);
+        await cadastrarProduto(dados);
         notificacao("Produto editado!")
       }
 
@@ -87,77 +85,80 @@ const Produto = () => {
 
   // quando produto for renderizado, a funcao listarCategoriaEmProduto acontece
   useEffect(() => {
+    if (!router.isReady) return;
 
     if (!verificarAutenticacao()) {
       router.push("/home")
-    } else {
-      setEstaAutenticado(true);
+      return;
     }
+    setEstaAutenticado(true);
 
     listarCategoriaEmProduto();
+
     carregarInformacoes();
-  }, [])
 
-  // a tela de produto não vai renderizar caso o usuário não esteja autenticado
-  if (!estaAutenticado) {
-    return null;
-  }
+  }, [router.isReady, id])
 
-  return (
-    <>
-      <SubHeader />
-      <Toast />
-      <main className={styles.main_produto}>
-        <section className={`${styles.section_flex} layout_guide`}>
-          <h1>{telaEditar ? "Editar produto" : "Criar produto"}</h1>
-          <form className={styles.formulario_produto} onSubmit={salvarProduto}>
-            <div className={styles.campo_form}>
-              <label htmlFor="">Nome do produto</label>
-              <input type="text" value={nome} onChange={(e) => setNome(e.target.value)} />
-            </div>
-            <div className={styles.campo_form}>
-              <label htmlFor="">Descrição</label>
-              <textarea value={descricao} onChange={(e) => setDescricao(e.target.value)}></textarea>
-            </div>
-            <div className={styles.campo_form}>
-              <label htmlFor="">Preço(R$)</label>
-              <input type="text" value={preco} onChange={(e) => setPreco(e.target.value)} />
-            </div>
-            <div className={styles.campo_form}>
-              <label htmlFor="">Categoria</label>
-              <select
-                multiple
-                value={categoriasSelecionadas.map(String)}
-                onChange={(e) => setCategoriasSelecionadas(
-                  Array.from(e.target.selectedOptions).map((option) => Number(option.value))
-                )}>
-                {categorias.map((item) => (
-                  <option value={item.categoriaId} key={item.categoriaId}>{item.nome}</option>
-                )
-                )}
-              </select>
+// a tela de produto não vai renderizar caso o usuário não esteja autenticado
+if (!estaAutenticado) {
+  return null;
+}
 
-              <a href="">Criar categoria</a>
-            </div>
-            <div className={styles.campo_form}>
-              <label htmlFor="">Imagem do produto</label>
-              <input
-                type="file" // o tipo file retorna um array
-                onChange={(e) => {
-                  // arquivo existe? e o campo está preenchido?
-                  if (e.target.files && e.target.files[0]) {
-                    setImagem(e.target.files[0]);
-                  }
-                }}
-              />
-            </div>
-            <button type="submit" id={styles.btn_salvar}>Salvar</button>
-          </form>
-        </section>
-      </main>
-      <Footer />
-    </>
-  )
+return (
+  <>
+    <SubHeader />
+    <Toast />
+    <main className={styles.main_produto}>
+      <section className={`${styles.section_flex} layout_guide`}>
+        <h1>{telaEditar ? "Editar produto" : "Criar produto"}</h1>
+        <form className={styles.formulario_produto} onSubmit={salvarProduto}>
+          <div className={styles.campo_form}>
+            <label htmlFor="">Nome do produto</label>
+            <input type="text" value={nome} onChange={(e) => setNome(e.target.value)} />
+          </div>
+          <div className={styles.campo_form}>
+            <label htmlFor="">Descrição</label>
+            <textarea value={descricao} onChange={(e) => setDescricao(e.target.value)}></textarea>
+          </div>
+          <div className={styles.campo_form}>
+            <label htmlFor="">Preço(R$)</label>
+            <input type="text" value={preco} onChange={(e) => setPreco(e.target.value)} />
+          </div>
+          <div className={styles.campo_form}>
+            <label htmlFor="">Categoria</label>
+            <select
+              multiple
+              value={categoriasSelecionadas.map(String)}
+              onChange={(e) => setCategoriasSelecionadas(
+                Array.from(e.target.selectedOptions).map((option) => Number(option.value))
+              )}>
+              {categorias.map((item) => (
+                <option value={item.categoriaId} key={item.categoriaId}>{item.nome}</option>
+              )
+              )}
+            </select>
+
+            <a href="/categoria">Criar categoria</a>
+          </div>
+          <div className={styles.campo_form}>
+            <label htmlFor="">Imagem do produto</label>
+            <input
+              type="file" // o tipo file retorna um array
+              onChange={(e) => {
+                // arquivo existe? e o campo está preenchido?
+                if (e.target.files && e.target.files[0]) {
+                  setImagem(e.target.files[0]);
+                }
+              }}
+            />
+          </div>
+          <button type="submit" id={styles.btn_salvar}>Salvar</button>
+        </form>
+      </section>
+    </main>
+    <Footer />
+  </>
+)
 }
 
 export default Produto;

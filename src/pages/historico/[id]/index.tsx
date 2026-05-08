@@ -36,17 +36,16 @@ const Historico = () => {
     }
 
     useEffect(() => {
-        if (!id) return;
-
-        setTimeout(() => {
-            listarHistorico();
-        }, 1000);
-        // vai listar apenas quando o id for modificado
-
         if (!verificarAutenticacao()) {
             router.push("/home")
         } else {
             setEstaAutenticado(true);
+            if (!id) return;
+
+            setTimeout(() => {
+                listarHistorico();
+            }, 1000);
+            // vai listar apenas quando o id for modificado
         }
     }, [id])
 
